@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>editor</title>
+    <style>
+      :root {color-scheme: light dark}
+      * {box-sizing: border-box}
+      body {overflow: hidden}
+      main {display: flex; flex-direction: column}
+      iframe {flex: 2}
+      html,body,main {width: 101%; height: 100%; margin: 0}
+      textarea {flex: 2; font-family: monospace; white-space: pre-wrap}
+    </style>
+  </head>
+  <body>
+    <main>
+      <iframe></iframe>
+      <textarea></textarea>
+    </main>
+    <script>
+      class Editor {
+        constructor(name="uri") {
+          this.name = name + "s"
+          this.store = name
+          this.$ = document.querySelector("textarea")
+          this.$$ = document.querySelector("iframe")
+          this.channel = new BroadcastChannel("editor-sync")
+          this.init()
+        }
+
+        async init() {
+          await this.initDB()
+          this.bindEvents()
+          if (!location.hash) location.hash = "home"
+          await this.load()
+          this.$.focus()
+        }
+
+        initDB() {
+          return new Promise((resolve, reject) => {
+            const req = indexedDB.open(this.name, 2)
+            req.onupgradeneeded = ev => {
+              this.db = ev.target.result
+              this.db.createObjectStore(this.store, { keyPath: "key" })
+            }
+            req.onsuccess = ev => {
+              this.db = ev.target.result
+              resolve()
+            }
+            req.onerror = ev => reject(ev.target.errorCode)
+          })
+        }
+
+        bindEvents() {
+          this.$.addEventListener("input", () => {
+            clearTimeout(this.saveTimeout)
+            this.saveTimeout = setTimeout(() => this.save(), 250)
+          })
+          window.addEventListener("hashchange", () => this.load())
+          this.channel.onmessage = ev => {
+            const { key, value } = ev.data
+            const currentKey = location.hash.slice(1) || "home"
+            if (key === currentKey && this.$.value !== value) {
+              this.$.value = value
+            }
+          }
+          window.addEventListener("beforeunload", () => this.channel.close())
+        }
+
+        update(code="") {
+          const doc = this.$$.contentDocument
+          if (!doc) return
+          doc.open()
+          doc.write("<style>:root {color-scheme: light dark; white-space: pre-wrap;} * {box-sizing: border-box;}</style>" + code)
+          doc.close()
+        }
+
+        async load() {
+          const hash = location.hash.slice(1) || "home"
+          const params = new URLSearchParams(location.search)
+          const importKeys = params.get('import')?.split(',') || []
+          
+	  const store = this.db.transaction([this.store], "readonly").objectStore(this.store)
+          const fetchContent = key => new Promise(resolve => {
+            store.get(key).onsuccess = ev => resolve(ev.target.result?.value || '')
+          })
+
+          const imports = await Promise.all(importKeys.map(fetchContent))
+
+          fetchContent(hash).then(currentContent => {
+            const combinedContent = [...imports, currentContent].join('\n')
+            this.update(combinedContent)
+            this.$.value = currentContent
+          })
+        }
+
+        async save() {
+          const key = location.hash.slice(1) || "home"
+          if (["source", "reset"].includes(key)) return
+          const value = this.$.value
+          await this.db.transaction([this.store], "readwrite").objectStore(this.store).put({ key, value })
+          this.channel.postMessage({ key, value })
+        }
+      }
+
+      ed = new Editor()
+    </script>
+  </body>
+</html>
