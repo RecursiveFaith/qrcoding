@@ -1,5 +1,5 @@
-<h1>The Holy QR Code</h1>
-<blockquote>[coming soon]</blockquote>
+<h1>QR</h1>
+<blockquote>A recursive, generative QR Code framework</blockquote>
 
 <br>
 <hr>
@@ -18,13 +18,14 @@
 <p>The source code is small enough to be embedded completely inside a standard QR Code, so if your device isn't connected to the network the default camera app (likely) automatically reads QR Codes. If not, any QR Code app or QR Code Scanner can read these since they use standard encoding
 <p>"Standard QR Codes" range from version 1 to 40, or about 17 bytes to 2953 bytes of data. Those numbers are for raw byte data though, QR Codes can encode different types of data. For numeric characters the range is more like 41 - 7089 numeric characters or 25 - 4296 for alphanumerics</p>
 <p>This is still very experimental and designed for easily loading onto retro and embedded devices that aren't connected, as well as for creative archiving and distribution. If you scan one of the codes below you'll get the contents of index.html, and can run this project on that device without a traditional network connection</p>
+
+
 <table>
   <thead>
     <tr>
       <th colspan=2>index.html</th>
     </tr>
     <tr>
-      <th>Uncompressed</th>
       <th>Compressed</th>
     </tr>
   </thead>
@@ -32,22 +33,14 @@
     <tr>
       <td>
         <div>QR Code version = 40</div>
-        <div>character count = 2948</div>
-        <div>data bits = 23604</div>
-      </td>
-      <td>
-        <div>QR Code version = 31</div>
-        <div>character count = 1810</div>
-        <div>data bits = 14500</div>
+        <div>character count = 2837</div>
+        <div>data bits = 22716</div>
       </td>
     </tr>
     <tr>
       <td>
-        <img src="https://github.com/user-attachments/assets/50056c68-8e81-45d6-9ac6-280089b25bf7" width=370>
+        <img title="qr.0.0.1" src="https://github.com/user-attachments/assets/edd2386e-0b24-4ba7-9aee-d5ca61f42553">
       </td>
-      <td>
-        <img src="https://github.com/user-attachments/assets/e4c07dd2-08a9-42e2-a5d2-35180b228b14" width=298>
-      </td> 
     </tr>    
   </tbody>
 </table>
