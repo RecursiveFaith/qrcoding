@@ -43,10 +43,10 @@
     </tr>
     <tr>
       <td>
-        <img src="https://github.com/user-attachments/assets/baba5c81-8e2c-474b-8085-434083daa83e" width=370>
+        <img src="https://github.com/user-attachments/assets/50056c68-8e81-45d6-9ac6-280089b25bf7" width=370>
       </td>
       <td>
-        <img src="https://github.com/user-attachments/assets/c19bfe85-2ba0-4eac-b3ff-f90c42dbccbd" width=298>
+        <img src="https://github.com/user-attachments/assets/e4c07dd2-08a9-42e2-a5d2-35180b228b14" width=298>
       </td> 
     </tr>    
   </tbody>
