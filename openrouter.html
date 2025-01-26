@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>editor</title>
+    <style>
+      :root {color-scheme: light dark}
+      * {box-sizing: border-box}
+      body {overflow: hidden}
+      main {display: flex; flex-direction: column}
+      iframe {flex: 2}
+      html,body,main {width: 101%; height: 100%; margin: 0}
+      textarea {flex: 2; font-family: monospace; white-space: pre-wrap}
+    </style>
+  </head>
+  <body>
+    <main>
+      <iframe></iframe>
+      <textarea></textarea>
+    </main>
+    <script>
+class Editor {
+  constructor(name) {
+    this.name = name
+    this.store = name
+    this.textarea = document.querySelector('textarea')
+    this.iframe = document.querySelector('iframe')
+    this.channel = new BroadcastChannel('editor-sync')
+    this.init()
+  }
+
+  async init() {
+    this.db = await new Promise((r,j) => {
+      const req = indexedDB.open(this.name, 2)
+      req.onupgradeneeded = e => (this.db = e.target.result).createObjectStore(this.store,{keyPath:'key'})
+      req.onsuccess = e => r(e.target.result)
+      req.onerror = e => j(e.target.errorCode)
+    })
+    await this.handleParams()
+    this.bindEvents()
+    location.hash ||= '#home'
+    await this.load()
+    this.textarea.focus()
+  }
+
+  async handleParams() {
+    const p = new URLSearchParams(location.search)
+    const s = this.db.transaction(this.store,'readwrite').objectStore(this.store)
+    
+    if (p.has('prompt')) {
+      const k = localStorage.getItem('api.key') || localStorage.setItem('api.key',prompt('OpenRouter API Key:'))
+      const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:'POST',
+        headers:{'Authorization':'Bearer '+k,'Content-Type':'application/json'},
+        body:JSON.stringify({model:localStorage.getItem('api.model')||'openai/gpt-3.5-turbo',
+          messages:[{role:'user',content:p.get('prompt')}]})
+      }).then(r=>r.json())
+      this.textarea.value = r.choices[0].message.content
+      await this.save()
+    }
+
+    for (const i of p.getAll('install')) {
+      const [k,c] = i.split(',')
+      if (k && c && (!await(p=>new Promise(r=>p.onsuccess=e=>r(e.target.result)))(s.get(k)) || confirm('Overwrite '+k+'?')))
+        await s.put(k,decodeURIComponent(c))
+    }
+    
+    history.replaceState(null,'',location.pathname+location.hash)
+  }
+
+  bindEvents() {
+    this.textarea.addEventListener('input',()=>{
+      cancelAnimationFrame(this._save)
+      this._save = requestAnimationFrame(()=>this.save())
+    })
+    addEventListener('hashchange',()=>this.load())
+    this.channel.onmessage = e => {
+      const [k,v] = e.data
+      if(k===(location.hash.slice(1)||'home'))this.textarea.value=v
+    }
+    addEventListener('beforeunload',()=>this.channel.close())
+  }
+
+  async save() {
+    const k = location.hash.slice(1)||'home'
+    if(['source','reset'].includes(k))return
+    const v = this.textarea.value
+    await this.db.transaction(this.store,'readwrite').objectStore(this.store).put({key:k,value:v})
+    this.channel.postMessage([k,v])
+  }
+
+  async load() {
+  const h = location.hash.slice(1)||'home'
+  const store = this.db.transaction(this.store,'readonly').objectStore(this.store)
+  const get = k => new Promise(r => store.get(k).onsuccess = e => r(e.target.result?.value))
+  const imports = await Promise.all((new URLSearchParams(location.search).get('import')||'').split(',').map(get))
+  const current = await get(h)
+  this.textarea.value = current || ''
+  this.update([...imports,current].join(''))
+}
+
+  update(code) {
+    const doc = this.iframe.contentDocument
+    if(!doc)return
+    doc.open()
+    doc.write(`<!DOCTYPE html><style>:root{color-scheme:light dark}*{white-space:pre-wrap;box-sizing:border-box}</style>${code}`)
+    doc.close()
+  }
+}
+
+new Editor('editor')      
+    </script>
+  </body>
+</html>
