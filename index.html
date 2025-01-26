@@ -18,125 +18,80 @@
       <textarea></textarea>
     </main>
     <script>
-      class Editor {
-        constructor(name="uri") {
-          this.name = name + "s"
-          this.store = name
-          this.$ = document.querySelector("textarea")
-          this.$$ = document.querySelector("iframe")
-          this.channel = new BroadcastChannel("editor-sync")
-          this.init()
-        }
-
-        async init() {
-          await this.initDB()
-          await this.handleInstall()
-          this.bindEvents()
-          if (!location.hash) location.hash = "home"
-          await this.load()
-          this.$.focus()
-
-	  const params = new URLSearchParams(location.search)
-	  if (params.has('install')) {
-	    params.delete('install')
-	    const newSearch = params.toString()
-	    const cleanURL = location.pathname + 
-	      (newSearch ? '?' + newSearch : '') + 
-	      location.hash
-	    history.replaceState(null, '', cleanURL)
-	  }
-        }
-
-	async handleInstall() {
-	  const params = new URLSearchParams(location.search)
-	  const installs = params.getAll('install')
-	  if (!installs.length) return
-
-	  const store = this.db.transaction([this.store], "readwrite").objectStore(this.store)
-
-	  for (const install of installs) {
-	    const [key, content] = install.split(',')
-	    if (!key || !content) continue
-
-	    const existing = await new Promise(resolve => {
-	      store.get(key).onsuccess = ev => resolve(ev.target.result)
-	    })
-
-	    if (existing && !confirm(`Key '${key}' already exists. Overwrite?`)) {
-	      continue
-	    }
-
-	    const value = decodeURIComponent(content)
-	    await store.put({ key, value })
-	  }
-	}
-
-        initDB() {
-          return new Promise((resolve, reject) => {
-            const req = indexedDB.open(this.name, 2)
-            req.onupgradeneeded = ev => {
-              this.db = ev.target.result
-              this.db.createObjectStore(this.store, { keyPath: "key" })
-            }
-            req.onsuccess = ev => {
-              this.db = ev.target.result
-              resolve()
-            }
-            req.onerror = ev => reject(ev.target.errorCode)
-          })
-        }
-
-        bindEvents() {
-          this.$.addEventListener("input", () => {
-            clearTimeout(this.saveTimeout)
-            this.saveTimeout = setTimeout(() => this.save(), 250)
-          })
-          window.addEventListener("hashchange", () => this.load())
-          this.channel.onmessage = ev => {
-            const { key, value } = ev.data
-            const currentKey = location.hash.slice(1) || "home"
-            if (key === currentKey && this.$.value !== value) {
-              this.$.value = value
-            }
-          }
-          window.addEventListener("beforeunload", () => this.channel.close())
-        }
-
-        update(code="") {
-          const doc = this.$$.contentDocument
-          if (!doc) return
-          doc.open()
-          doc.write("<style>:root {color-scheme: light dark; white-space: pre-wrap;} * {box-sizing: border-box;}</style>" + code)
-          doc.close()
-        }
-
-        async load() {
-          const hash = location.hash.slice(1) || "home"
-          const params = new URLSearchParams(location.search)
-          const importKeys = params.get('import')?.split(',') || []
-          
-          const store = this.db.transaction([this.store], "readonly").objectStore(this.store)
-          const fetchContent = key => new Promise(resolve => {
-            store.get(key).onsuccess = ev => resolve(ev.target.result?.value || '')
-          })
-
-          const imports = await Promise.all(importKeys.map(fetchContent))
-          const current = await fetchContent(hash)
-          
-          this.update([...imports, current].join('\n'))
-          this.$.value = current
-        }
-
-        async save() {
-          const key = location.hash.slice(1) || "home"
-          if (["source", "reset"].includes(key)) return
-          const value = this.$.value
-          await this.db.transaction([this.store], "readwrite").objectStore(this.store).put({ key, value })
-          this.channel.postMessage({ key, value })
-        }
-      }
-
-      ed = new Editor()
+			class Editor {
+			  constructor(name) {
+			    this.name = name
+			    this.store = name
+			    this.textarea = document.querySelector('textarea')
+			    this.iframe = document.querySelector('iframe')
+			    this.channel = new BroadcastChannel('editor-sync')
+			    this.init()
+			  }
+			
+			  async init() {
+			    this.db = await new Promise((r,j) => {
+			      const req = indexedDB.open(this.name, 2)
+			      req.onupgradeneeded = e => (this.db = e.target.result).createObjectStore(this.store, {keyPath:'key'})
+			      req.onsuccess = e => r(e.target.result)
+			      req.onerror = e => j(e.target.errorCode)
+			    })
+			    await this.handleInstall()
+			    this.bindEvents()
+			    location.hash ||= '#home'
+			    await this.load()
+			    this.textarea.focus()
+			  }
+			
+			  async handleInstall() {
+			    const s = this.db.transaction(this.store,'readwrite').objectStore(this.store)
+			    for (const i of new URLSearchParams(location.search).getAll('install')) {
+			      const [k,c] = i.split(',')
+			      if (k && c && (!await(p=>new Promise(r=>p.onsuccess=e=>r(e.target.result)))(s.get(k)) || confirm('Overwrite '+k+'?')))
+				await s.put(k,decodeURIComponent(c))
+			    }
+			    history.replaceState(null,'',location.href.replace(/[?&]install=[^&]*/g,''))
+			  }
+			
+			  bindEvents() {
+			    this.textarea.addEventListener('input',() => {
+			      cancelAnimationFrame(this._save)
+			      this._save = requestAnimationFrame(() => this.save())
+			    })
+			    addEventListener('hashchange', () => this.load())
+			    this.channel.onmessage = e => {
+			      const [k,v] = e.data
+			      if (k === (location.hash.slice(1)||'home')) this.textarea.value = v
+			    }
+			    addEventListener('beforeunload', () => this.channel.close())
+			  }
+			
+			  async save() {
+			    const k = location.hash.slice(1)||'home'
+			    if (['source','reset'].includes(k)) return
+			    const v = this.textarea.value
+			    await this.db.transaction(this.store,'readwrite').objectStore(this.store).put({key:k,value:v})
+			    this.channel.postMessage([k,v])
+			  }
+			
+			  async load() {
+			    const h = location.hash.slice(1)||'home'
+			    const store = this.db.transaction(this.store,'readonly').objectStore(this.store)
+			    const get = k => new Promise(r => store.get(k).onsuccess = e => r(e.target.result?.value))
+			    const imports = await Promise.all((new URLSearchParams(location.search).get('import')||'').split(',').map(get))
+			    const current = await get(h)
+			    this.update([...imports,current].join(''))
+			  }
+			
+			  update(code) {
+			    const doc = this.iframe.contentDocument
+			    if (!doc) return
+			    doc.open()
+			    doc.write(`<!DOCTYPE html><style>:root{color-scheme:light dark}*{white-space:pre-wrap;box-sizing:border-box}</style>${code}`)
+			    doc.close()
+			  }
+			}
+			
+			new Editor('editor')
     </script>
   </body>
 </html>
