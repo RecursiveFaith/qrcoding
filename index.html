@@ -84,7 +84,7 @@ Bootstrapping:
                 method:'POST',
                 headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},
                 body:JSON.stringify({
-                  model:localStorage.getItem('api.model')||'anthropic/claude-3.5-sonnet',
+                  model:localStorage.getItem('api.model')||'deepseek/deepseek-r1',
                   messages:[{role:'system',content:sp},{role:'user',content:p.get('prompt')}]
                 })
               }).then(x=>x.json())
