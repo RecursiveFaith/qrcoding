@@ -2,7 +2,7 @@
  
 # Agentic QR Codes
 
-> ***What are the smallest arrangements of matter from which agentic processes can emerge?***
+> ***Research Questions:*** _Is it possible to create a single self-contained QR code that generates a Large Language Model simulated Operating System? Can an LLM OS be used to generate full-dive mixed realities?_
 
 ## Technical Foundation
 
@@ -38,12 +38,26 @@ Agentic QR codes are ones that contain all the code necessary to bootstrap an LL
 
 ## Browser Implementations
 
-- Reimagines the browsers IndexedDB as a filesystem
-  - IndexedDB stores values in `key : value` pairs
-  - The `key` represents the filename and `value` represents the files contents
-  - You can navigate these files by changing the `#hashstring` in the URL
-- Add a `?prompt` to the URL to have an assistant edit the file
-  - Depending on the API you are using you may need to add an API Key
+The following QR codes all encode the same minimal serverless LLM OS as a static HTML, they just differ in their LLM API implementation. Scan the code to copy + paste the string into a `.html` file, then open that file in the browser. Alternatively, you can view the source code in this repo and generate your own codes.
+
+### How it works
+> **Note:** I'm still editing this section
+
+- Reimagines IndexedDB as the filesystem
+  - There is a table called `page`
+  - The `window.location` `#hashstring` is used as the key
+  - The value is rendered by the browser as raw HTML + JavaScript
+- By default each `#hashstring` is displayed in a textarea annd iframe
+  - The textarea lets you edit the `page` contents
+  - The iframe renders it, applying `<style>` and running `<script>` tags
+- The URL itself is also a prompting interface
+  - Add a `?prompt` to the URL to have an LLM edit the page
+  - If you are using a cloud hosted LLM like ChatGPT it'll ask for an API key
+  - The prompt gets sent with `<url>window.location</url><page>contents of #hastring</page>` and a system prompt
+- Opening two tabs to the same `#hashstring` will keep them synced as you edit
+  - This prevents accidental edits
+  - Lets you view and edit different parts of the same page
+  - Uses the browsers' Broadcasting and Observable APIs
 
 <table>
   <thead>
