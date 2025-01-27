@@ -4,7 +4,7 @@
 
 ## Technical Foundation
 
-Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supporting up to 2,953 bytes of raw data with error correction. This capacity enables the embedding of generative interfaces within a single QR code, allowing you to instantly agentize any device or embedded system with a webcam and web browser, even if offline
+Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supporting up to 2,953 bytes of raw data with error correction. They are robust and can be encoded into various mediums and scanned from nearly any device
 
 <table>
   <thead>
@@ -29,6 +29,10 @@ Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supp
     </tr>    
   </tbody>
 </table>
+
+AGI is here and Language Models are now capable of doing a variety of tasks. 
+
+<a href="https://huggingface.co/blog/shivance/illustrated-llm-os"><img width="1440" title="Illustrated LLM OS: An Implementational Perspective" src="https://github.com/user-attachments/assets/7c3d07f4-a3f7-4296-9235-d640bba1fce2" /></a>
 
 ## Implementation Example
 
