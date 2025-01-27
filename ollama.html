@@ -77,18 +77,17 @@ Bootstrapping:
             if(p.get('prompt')){
               let h=L.hash.slice(1)||'home' // Get current page key
               let currentContent = await this.o('readonly',h) || '' // Load existing content
-              let key=localStorage.getItem('api.key')||localStorage.setItem('api.key',prompt('OpenRouter API Key:'))
-              let sp=`<url>${L.href}</url><page>${currentContent}</page><system>Regenerate ALL of <page/> including users prompt</system>`
               // Fetch AI-generated content based on the prompt
-              let r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+              let r=await fetch('http://localhost:11434/api/generate',{
                 method:'POST',
-                headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},
+                headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({
-                  model:localStorage.getItem('api.model')||'deepseek/deepseek-r1',
-                  messages:[{role:'system',content:sp},{role:'user',content:p.get('prompt')}]
+                  model: 'deepseek-r1:8b',
+                  prompt: p.get('prompt'),
+                  stream: false
                 })
               }).then(x=>x.json())
-              this.t.value=r.choices[0].message.content // Update textarea with generated content
+              this.t.value=r.response // Update textarea with generated content
               await this.sv() // Save updated content to database
               p.set('prompt','') // Clear prompt from URL
               history.replaceState(null,'',L.pathname+'?'+p.toString()+L.hash) // Update browser history
