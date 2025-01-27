@@ -86,6 +86,7 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
     <tr>
       <td>
         <h3><a href="https://ollama.sh">Ollama.sh</a></h3>
+        <p><a href="./ollama.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/ollama">Demo</a></p>
         <img src="./ollama.0.2.png" width=354>
         <ul>
           <li>Default model: <a href="https://ollama.com/library/deepseek-r1:8b">deepseek/deepseek-r1</a>
@@ -95,6 +96,7 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
       </td>
       <td>
         <h3><a href="https://openrouter.ai">OpenRouter.ai</a></h3>
+        <p><a href="./openrouter.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/openrouter">Demo</a></p>
         <img src="./openrouter.0.1.png" width=354>
         <ul>
           <li>Default model: <a href="https://openrouter.ai/deepseek/deepseek-r1">deepseek/deepseek-r1</a>
