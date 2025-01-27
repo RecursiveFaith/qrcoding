@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+Version: 0.2
+Default backend: openrouter.ai
+Default model:   https://openrouter.ai/deepseek/deepseek-r1
+
+Prompting:
+- Add ?prompt='changes to make to page', before the #hash
+- Doing so sends
+  <url>window.location.hash</ulr>
+  <page>IndexedDB content for window.location.hash</page>
+  <system>localStorage['system.prompt']</system>
+  The prompt
+
+Bootstrapping:
+- Prefix other content to this page with ?boot=hash1,hash2,hash3
+- Edit #boot to update code that runs on every page
+-->
+<html>
+  <head>
+    <title>editor</title>
+    <style>
+      :root{color-scheme:light dark} /* Support browser's native light/dark themes */
+      *{box-sizing:border-box} /* Ensure consistent box-sizing */
+      body{overflow:hidden} /* Prevent scrolling */
+      main{display:flex;flex-direction:column} /* Layout: stack iframe and textarea */
+      iframe,textarea{flex:2} /* Equal space for iframe and textarea */
+      html,body,main{width:101%;height:100%;margin:0} /* Fullscreen layout */
+      textarea{font-family:monospace;white-space:pre-wrap} /* Monospace font for code editing */
+    </style>
+  </head>
+  <body>
+    <main>
+      <iframe></iframe> <!-- Preview area -->
+      <textarea></textarea> <!-- Code editor -->
+    </main>
+    <script>
+      ;(async ()=>{ 
+        let D=document,U=URLSearchParams,L=location
+        class E{
+          constructor(n,db){
+            // Initialize editor instance with name, store, and database
+            [this.name,this.store,this.db]=[n,n,db]
+            // Select textarea and iframe elements
+            ;[this.t,this.f]=['textarea','iframe'].map(s=>D.querySelector(s))
+            // Create a BroadcastChannel for multi-tab sync
+            this.c=new BroadcastChannel('editor-sync')
+          }
+          
+          // Static method to create an editor instance
+          static async c(n){
+            // Open IndexedDB and create object store if needed
+            const db=await new Promise((r,j)=>{
+              let q=indexedDB.open(n,2)
+              q.onupgradeneeded=e=>e.target.result.createObjectStore(n,{keyPath:'key'})
+              q.onsuccess=e=>r(e.target.result)
+              q.onerror=e=>j(e.target.errorCode)
+            })
+            let e=new E(n,db)
+            await e.hp() // Handle prompt if provided in URL
+            e.b() // Bind event listeners
+            L.hash||='#home' // Default to #home if no hash is present
+            await e.ld() // Load content for the current page
+            e.t.focus() // Focus on the textarea
+            return e
+          }
+
+          // Perform database operations (read/write)
+          async o(m,k,v){
+            let s=this.db.transaction(this.store,m).objectStore(this.store)
+            return v?s.put({key:k,value:v}):new Promise(r=>s.get(k).onsuccess=x=>r(x.target.result?.value))
+          }
+
+          // Handle prompt from URL to generate or modify content
+          async hp(){
+            let p=new U(L.search)
+            if(p.get('prompt')){
+              let h=L.hash.slice(1)||'home' // Get current page key
+              let currentContent = await this.o('readonly',h) || '' // Load existing content
+              let key=localStorage.getItem('api.key')||localStorage.setItem('api.key',prompt('OpenRouter API Key:'))
+              let sp=`<url>${L.href}</url><page>${currentContent}</page><system>Regenerate ALL of <page/> including users prompt</system>`
+              // Fetch AI-generated content based on the prompt
+              let r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+                method:'POST',
+                headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},
+                body:JSON.stringify({
+                  model:localStorage.getItem('api.model')||'deepseek/deepseek-r1',
+                  messages:[{role:'system',content:sp},{role:'user',content:p.get('prompt')}]
+                })
+              }).then(x=>x.json())
+              this.t.value=r.choices[0].message.content // Update textarea with generated content
+              await this.sv() // Save updated content to database
+              p.set('prompt','') // Clear prompt from URL
+              history.replaceState(null,'',L.pathname+'?'+p.toString()+L.hash) // Update browser history
+            }
+          }
+
+          // Bind event listeners for input changes and navigation events
+          b(){
+            this.t.oninput=()=>{cancelAnimationFrame(this.S);this.S=requestAnimationFrame(()=>this.sv())} // Save on input with debounce
+            onhashchange=()=>this.ld() // Load new page on hash change
+            this.c.onmessage=({data:[k,v]})=>k===(L.hash.slice(1)||'home')&&(this.t.value=v) // Sync across tabs
+            onbeforeunload=()=>this.c.close() // Close BroadcastChannel on unload
+          }
+
+          // Save the current page's content to the database and sync it across tabs
+          async sv(){
+            let k=L.hash.slice(1)||'home'
+            if(k){ // Only save if key is valid (not 'source' or 'reset')
+              let v=this.t.value
+              await this.o('readwrite',k,v) // Save to IndexedDB
+              this.c.postMessage([k,v]) // Broadcast update to other tabs
+            }
+          }
+
+          // Load content for the current page from the database and update preview
+          async ld(){
+            let h=L.hash.slice(1)||'home' // Get current page key from hash
+            let c=await this.o('readonly',h) // Load content from IndexedDB
+            this.t.value=c||'' // Update textarea with loaded content or empty string
+            this.up(c||'') // Update iframe preview with loaded content or empty string
+          }
+
+          // Update the iframe preview with the current content and boot parameters (if any)
+          async up(c){
+            let boot=await this.o('readonly','boot')||'' // Load boot script if present
+            let bootParam=''
+            if(new U(L.search).get('boot')){ 
+              bootParam=await Promise.all(new U(L.search).get('boot').split(',')
+                .map(k=>this.o('readonly',k)))
+                .then(b=>b.filter(Boolean).join('\n')) // Combine boot parameters if any are specified in URL search params
+            }
+            let d=this.f.contentDocument 
+            d?.write(`<!DOCTYPE html><style>:root{color-scheme:light dark}*{white-space:pre-wrap;box-sizing:border-box}</style>${[boot,bootParam,c].filter(Boolean).join('\n')}`) 
+            d?.close() 
+          }
+        }
+        ed = await E.c('editor') // Initialize the editor instance with 'editor' as the database name
+      })();
+    </script>
+  </body>
+</html>
