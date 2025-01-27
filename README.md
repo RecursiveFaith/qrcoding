@@ -1,6 +1,8 @@
-# Agentic QR codes
+(this is still a draft research project)
+ 
+# Agentic QR Codes
 
-> ***What is the smallest arrangement of matter and energy from which an agentic process can emerge?***
+> ***What are the smallest arrangements of matter from which agentic processes can emerge?***
 
 ## Technical Foundation
 
@@ -30,11 +32,18 @@ Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supp
   </tbody>
 </table>
 
-AGI is here and Language Models are now capable of doing a variety of tasks. 
+Agentic QR codes are ones that contain all the code necessary to bootstrap an LLM OS. An LLM OS is an Operating System metaphor that imagines AI as the Central Processing Units of virtual machines
 
 <a href="https://huggingface.co/blog/shivance/illustrated-llm-os"><img width="1440" title="Illustrated LLM OS: An Implementational Perspective" src="https://github.com/user-attachments/assets/7c3d07f4-a3f7-4296-9235-d640bba1fce2" /></a>
 
-## Implementation Example
+## Browser Implementations
+
+- Reimagines the browsers IndexedDB as a filesystem
+  - IndexedDB stores values in `key : value` pairs
+  - The `key` represents the filename and `value` represents the files contents
+  - You can navigate these files by changing the `#hashstring` in the URL
+- Add a `?prompt` to the URL to have an assistant edit the file
+  - Depending on the API you are using you may need to add an API Key
 
 <table>
   <thead>
