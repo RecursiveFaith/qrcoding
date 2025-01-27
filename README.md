@@ -84,12 +84,11 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
   <tbody>
     <tr>
       <td>
-        <h3>OpenRouter</h3>
+        <h3><a href="https://openrouter.ai">OpenRouter.ai</a></h3>
         <img src="./openrouter.0.1.png" width=354>
         <ul>
-          <li>API keys available at https://openrouter.ai</li>
-          <li>Large collection of models</li>
-          <li>Includes vision and experimental models</li>
+          <li>Default model: <a href="https://openrouter.ai/deepseek/deepseek-r1">deepseek/deepseek-r1</a>
+          <li>Supports vision models</li>
         </ul>
       </td>
       <td>
