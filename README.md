@@ -6,7 +6,7 @@
 
 ## Technical Foundation
 
-Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supporting up to 2,953 bytes of raw data with error correction. QR codes are ubiquitous and can be scanned from nearly any device, old and new. The algorithm is open-sourced and has been encoded across a wide range of creative mediums:
+Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supporting up to 2,953 bytes of raw data with error correction. QR codes are ubiquitous and can be scanned from nearly any device. The algorithm is open-sourced and has been encoded across a wide range of creative mediums:
 
 <table>
   <thead>
@@ -34,11 +34,38 @@ Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supp
 
 "Agentic QR codes" are ones that contain all the code necessary to bootstrap an LLM OS. An LLM OS is an Operating System metaphor that imagines AI as the Central Processing Units of generative virtual machines.
 
-<a href="https://huggingface.co/blog/shivance/illustrated-llm-os"><img width="1440" title="Illustrated LLM OS: An Implementational Perspective" src="https://github.com/user-attachments/assets/7c3d07f4-a3f7-4296-9235-d640bba1fce2" /></a>
+<table>
+  <thead>
+    <tr>
+      <th colspan=1>
+        Articles explaining LLM OS
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://huggingface.co/blog/shivance/illustrated-llm-os">
+          <img width="1440" title="Illustrated LLM OS: An Implementational Perspective" src="https://github.com/user-attachments/assets/7c3d07f4-a3f7-4296-9235-d640bba1fce2" />
+        </a>
+      </td>
+    </tr>    
+  </tbody>
+</table>
 
 ## Browser implementation
 
-For convenience these QR codes all encode the same static HTML file and bootstrapped OS, they just differ in their default LLM API implementation.
+An LLM OS can be implemented in any language and environment that can communicate with an LLM. This section focuses on using a Web Browser as the host environment because browser APIs expose the following:
+
+- Sensors like accelerometers, microphone and webcams, and connected MIDI devices
+- 3rd party libraries and tools via CDNs
+- Networking protocols like Websockets and Bluetooth
+- Accessible via mobile devices, smart projectors, and embedded systems
+
+The system reimagines IndexedDB as the filesystem, with a table called `page` where the `window.location #hashstring` is used as the key. The value is rendered by the browser as raw HTML + JavaScript. Each `#hashstring` is displayed in a `textarea` and `iframe`, allowing editing and rendering. The URL itself acts as a prompting interface, enabling LLM edits with a `?prompt` parameter. Opening multiple tabs to the same `#hashstring` keeps them synced, preventing accidental edits and allowing simultaneous viewing and editing.
+
+### Bootstrapping the LLM OS
+For convenience, these QR codes all encode the same static HTML file and bootstrapped LLM OS, they just differ in their default LLM API implementation.
 
 - Scan one of the codes
 - Copy + paste the string into a `.html` file
@@ -47,9 +74,6 @@ For convenience these QR codes all encode the same static HTML file and bootstra
 You can also just clone or download the files in this repo and open them in a browser. You only have to manually create the file once, you can extend the LLM OS by simply scanning QR codes into the OS directly
 
 Data is persisted using the browser's IndexedDB API. If you open these files directly, the data will be mapped to that specific filename. Changing the filename would generate a new IndexedDB database (while keeping the old one). For production use, it's recommended to run a server (todo: explain how).
-
-### How It Works
-The system reimagines IndexedDB as the filesystem, with a table called page where the window.location #hashstring is used as the key. The value is rendered by the browser as raw HTML + JavaScript. Each #hashstring is displayed in a textarea and iframe, allowing editing and rendering. The URL itself acts as a prompting interface, enabling LLM edits with a ?prompt parameter. Opening multiple tabs to the same #hashstring keeps them synced, preventing accidental edits and allowing simultaneous viewing and editing.
 
 <table>
   <thead>
