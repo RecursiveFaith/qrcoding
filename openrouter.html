@@ -66,14 +66,22 @@
     let i=await Promise.all((new U(L.search).get('import')||'').split(',').map(k=>this.o('readonly',k)))
     let c=await this.o('readonly',h)
     this.t.value=c||''
-    this.up([...i,c].join(''))
+    this.up(c||'')
   }
-  up(c){
+
+  async up(c){
+    let boot=await this.o('readonly','boot')||''
+    let bootParam=''
+    if(new U(L.search).get('boot')){
+      bootParam=await Promise.all(new U(L.search).get('boot').split(',')
+        .map(k=>this.o('readonly',k)))
+        .then(b=>b.filter(Boolean).join('\n'))
+    }
     let d=this.f.contentDocument
-    d?.write(`<!DOCTYPE html><style>:root{color-scheme:light dark}*{white-space:pre-wrap;box-sizing:border-box}</style>${c}`)
+    d?.write(`<!DOCTYPE html><style>:root{color-scheme:light dark}*{white-space:pre-wrap;box-sizing:border-box}</style>${[boot,bootParam,c].filter(Boolean).join('\n')}`)
     d?.close()
   }
   }
   E.c('editor')
   })();
-  </script></body></html>
+</script></body></html>
