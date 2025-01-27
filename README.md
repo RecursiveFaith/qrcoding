@@ -86,7 +86,8 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
     <tr>
       <td>
         <h3><a href="https://ollama.sh">Ollama.sh</a></h3>
-        <img src="./ollama.0.2.png" width=354>
+        <p><a href="./ollama.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/ollama">Hosted</a></p>
+        <img src="./ollama.png" width=354>
         <ul>
           <li>Default model: <a href="https://ollama.com/library/deepseek-r1:8b">deepseek/deepseek-r1</a>
           <li>Supports vision models</li>
@@ -95,7 +96,8 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
       </td>
       <td>
         <h3><a href="https://openrouter.ai">OpenRouter.ai</a></h3>
-        <img src="./openrouter.0.1.png" width=354>
+        <p><a href="./openrouter.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/openrouter">Hosted</a></p>
+        <img src="./openrouter.png" width=354>
         <ul>
           <li>Default model: <a href="https://openrouter.ai/deepseek/deepseek-r1">deepseek/deepseek-r1</a>
           <li>Supports vision models</li>
@@ -105,24 +107,6 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
     </tr>    
   </tbody>
 </table>
-
-## Roadmap
-- [ ] QR code addons
-  - [ ] Desktop simulator
-    - [ ] Calculator
-    - [ ] Markdown editor
-    - [ ] Image editor
-  - [ ] Cloud sync
-    - [ ] Dexie.js cloud database
-- [ ] Environments
-  - [ ] Browser extension
-  - [ ] Native desktop
-- [ ] Research
-  - [ ] Animated QR codes
-  - [ ] Multicolor QR codes
-  - [ ] Air gapped visual network protocols with QR codes by pointing devices at each other
-- [ ] Organizational
-  - [ ] Automate QR code generation for this repo
 
 ## Development Notes
 
