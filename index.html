@@ -1,4 +1,21 @@
 <!DOCTYPE html>
+<!--
+Version: 0.2
+Default backend: openrouter.ai
+Default model:   https://openrouter.ai/deepseek/deepseek-r1
+
+Prompting:
+- Add ?prompt='changes to make to page', before the #hash
+- Doing so sends
+  <url>window.location.hash</ulr>
+  <page>IndexedDB content for window.location.hash</page>
+  <system>localStorage['system.prompt']</system>
+  The prompt
+
+Bootstrapping:
+- Prefix other content to this page with ?boot=hash1,hash2,hash3
+- Edit #boot to update code that runs on every page
+-->
 <html>
   <head>
     <title>editor</title>
