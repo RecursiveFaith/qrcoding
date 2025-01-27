@@ -78,21 +78,30 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
 <table>
   <thead>
     <tr>
-      <th colspan=2><h3>Cloud Hosted LLMs</h3></th>
+      <th colspan=1><h3>Local models</h3></th>
+      <th colspan=1><h3>Cloud Hosted LLMs</h3></th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td>
+        <h3><a href="https://ollama.sh">Ollama.sh</a></h3>
+        <img src="./ollama.0.2.png" width=354>
+        <ul>
+          <li>Default model: <a href="https://ollama.com/library/deepseek-r1:8b">deepseek/deepseek-r1</a>
+          <li>Supports vision models</li>
+          <li>Don't forget to <a href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server">enable CORS in Ollama</a></li>
+        </ul>
+      </td>
       <td>
         <h3><a href="https://openrouter.ai">OpenRouter.ai</a></h3>
         <img src="./openrouter.0.1.png" width=354>
         <ul>
           <li>Default model: <a href="https://openrouter.ai/deepseek/deepseek-r1">deepseek/deepseek-r1</a>
           <li>Supports vision models</li>
+          <li>Free API keys available</li>
         </ul>
       </td>
-      <td>
-      </td> 
     </tr>    
   </tbody>
 </table>
