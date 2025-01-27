@@ -6,10 +6,29 @@
 
 Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supporting up to 2,953 bytes of raw data with error correction. This capacity enables the embedding of generative interfaces within a single QR code, allowing you to instantly agentize any device or embedded system with a webcam and web browser, even if offline
 
-As demonstrated by Veritassium and others, it's possible to create scannable QR codes by simply arranging matter:
-
-[![Veritassium: I built a QR code with my bare hands to see how it works](https://img.youtube.com/vi/w5ebcowAJD8/0.jpg)](https://www.youtube.com/watch?v=w5ebcowAJD8)
-[![Ken Shirriff: QR codes in Lego ](https://static.righto.com/images/legoqr.jpg)](https://www.righto.com/2009/01/qr-codes-in-lego.html)
+<table>
+  <thead>
+    <tr>
+      <th colspan=2>
+        QR codes are medium agnostic
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://www.youtube.com/watch?v=w5ebcowAJD8">
+          <img title="Veritassium: I built a QR code with my bare hands to see how it works" src="https://img.youtube.com/vi/w5ebcowAJD8/0.jpg" width=354>
+        </a>
+      </td>
+      <td>
+        <a href="https://www.righto.com/2009/01/qr-codes-in-lego.html">
+          <img title="Ken Shirriff: QR codes in Lego" src="https://static.righto.com/images/legoqr.jpg" width=354>
+        </a>
+      </td>
+    </tr>    
+  </tbody>
+</table>
 
 ## Implementation Example
 
