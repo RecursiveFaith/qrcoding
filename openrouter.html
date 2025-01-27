@@ -37,7 +37,7 @@
         method:'POST',
         headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},
         body:JSON.stringify({
-          model:localStorage.getItem('api.model')||'openai/gpt-3.5-turbo',
+          model:localStorage.getItem('api.model')||'anthropic/claude-3.5-sonnet:beta',
           messages:[{role:'system',content:sp},{role:'user',content:p.get('prompt')}]
         })
       }).then(x=>x.json())
@@ -45,10 +45,6 @@
       await this.sv()
       p.set('prompt','')
       history.replaceState(null,'',L.pathname+'?'+p.toString()+L.hash)
-    }
-    for(let i of p.getAll('install')){
-      let[k,c]=i.split(',')
-      if(k&&c&&(!await this.o('readonly',k)||confirm('Overwrite '+k+'?')))await this.o('readwrite',k,decodeURIComponent(c))
     }
   }
   b(){
@@ -80,4 +76,4 @@
   }
   E.c('editor')
   })();
-</script></body></html>
+  </script></body></html>
