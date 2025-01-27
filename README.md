@@ -32,7 +32,7 @@ Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supp
   </tbody>
 </table>
 
-"Agentic QR codes" are ones that contain all the code necessary to bootstrap an LLM OS. An LLM OS is an Operating System metaphor that imagines AI as the Central Processing Units of generative virtual machines.
+"Agentic QR codes" are ones that contain all the code necessary to bootstrap an LLM OS. An LLM OS is an Operating System metaphor that imagines AI as the Central Processing Units of generative virtual machines:
 
 <table>
   <thead>
@@ -55,10 +55,10 @@ Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supp
 
 ## Browser implementation
 
-An LLM OS can be implemented in any language and environment that can communicate with an LLM. This section focuses on using a Web Browser as the host environment because browser APIs expose the following:
+An LLM OS can be implemented in any language and environment that can communicate with an LLM. This section focuses on using a Web Browser as the host environment because Browsers expose the following:
 
-- Sensors like accelerometers, microphone and webcams, and connected MIDI devices
-- 3rd party libraries and tools via CDNs
+- External `<scripts>` via CDNs, Github, and local servers
+- Sensors like accelerometers, microphones, webcams, MIDI devices, and other input devices
 - Networking protocols like Websockets and Bluetooth
 - Accessible via mobile devices, smart projectors, and embedded systems
 
@@ -78,16 +78,19 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
 <table>
   <thead>
     <tr>
-      <th colspan=2><h3>OpenRouter</h3></th>
+      <th colspan=2><h3>Cloud Hosted LLMs</h3></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>
-        <ul>
-          <li>Free API keys available https://openrouter.ai</li>
-        </ul>
+        <h3>OpenRouter</h3>
         <img src="./openrouter.0.1.png" width=354>
+        <ul>
+          <li>API keys available at https://openrouter.ai</li>
+          <li>Large collection of models</li>
+          <li>Includes vision and experimental models</li>
+        </ul>
       </td>
       <td>
       </td> 
