@@ -62,7 +62,7 @@ An LLM OS can be implemented in any language and environment that can communicat
 - Networking protocols like Websockets and Bluetooth
 - Accessible via mobile devices, smart projectors, and embedded systems
 
-The system reimagines IndexedDB as the filesystem, with a table called `page` where the `window.location #hashstring` is used as the key. The value is rendered by the browser as raw HTML + JavaScript. Each `#hashstring` is displayed in a `textarea` and `iframe`, allowing editing and rendering. The URL itself acts as a prompting interface, enabling LLM edits with a `?prompt` parameter. Opening multiple tabs to the same `#hashstring` keeps them synced, preventing accidental edits and allowing simultaneous viewing and editing.
+The system reimagines IndexedDB as the filesystem, with a table called `os` where the `window.location #hashstring` is used as the key. The value is rendered by the browser as raw HTML + JavaScript. Each `#hashstring` is displayed in a `textarea` and `iframe`, allowing editing and rendering. The URL itself acts as a prompting interface, enabling LLM edits with a `?prompt` parameter. Opening multiple tabs to the same `#hashstring` keeps them synced, preventing accidental edits and allowing simultaneous viewing and editing.
 
 ### Bootstrapping the LLM OS
 For convenience, these QR codes all encode the same static HTML file and bootstrapped LLM OS, they just differ in their default LLM API implementation.
