@@ -78,7 +78,7 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
 <table>
   <thead>
     <tr>
-      <th colspan=1><h3>Local models</h3></th>
+      <th colspan=1><h3>Local LLMs</h3></th>
       <th colspan=1><h3>Cloud Hosted LLMs</h3></th>
     </tr>
   </thead>
