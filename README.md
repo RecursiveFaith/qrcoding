@@ -105,6 +105,9 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
     - [ ] Image editor
   - [ ] Cloud sync
     - [ ] Dexie.js cloud database
+- [ ] Environments
+  - [ ] Browser extension
+  - [ ] Native desktop
 - [ ] Research
   - [ ] Animated QR codes
   - [ ] Multicolor QR codes
