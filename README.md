@@ -9,45 +9,47 @@
 Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supporting up to 2,953 bytes of raw data with error correction. QR codes are ubiquitous and can be scanned from nearly any device. The algorithm is open-sourced and has been encoded across a wide range of creative mediums:
 
 <table>
-  <thead>
-    <tr>
-      <th colspan=2>
-        Videos and articles explaining QR codes across different mediums
-      </th>
-    </tr>
-  </thead>
-  <tbody>
+  <tbody style="text-align: center">
     <tr>
       <td>
         <a href="https://www.youtube.com/watch?v=w5ebcowAJD8">
-          <img title="Veritassium: I built a QR code with my bare hands to see how it works" src="https://img.youtube.com/vi/w5ebcowAJD8/0.jpg" width=354>
+          <img title="Veritassium: I built a QR code with my bare hands to see how it works" 
+               src="https://img.youtube.com/vi/w5ebcowAJD8/0.jpg" 
+               width=354>
         </a>
+        <div>
+          <a href="https://www.youtube.com/watch?v=w5ebcowAJD8">Veritassium: Physical QR Code Construction</a>
+        </div>
       </td>
       <td>
         <a href="https://www.righto.com/2009/01/qr-codes-in-lego.html">
-          <img title="Ken Shirriff: QR codes in Lego" src="https://static.righto.com/images/legoqr.jpg" width=354>
+          <img title="Ken Shirriff: QR codes in Lego" 
+               src="https://static.righto.com/images/legoqr.jpg" 
+               width=354>
         </a>
+        <div>
+          <a href="https://www.righto.com/2009/01/qr-codes-in-lego.html">Ken Shirriff: LEGO-Encoded QR System</a>
+        </div>
       </td>
     </tr>    
   </tbody>
 </table>
 
+
 "Agentic QR codes" are ones that contain all the code necessary to bootstrap an LLM OS. An LLM OS is an Operating System metaphor that imagines AI as the Central Processing Units of generative virtual machines:
 
 <table>
-  <thead>
-    <tr>
-      <th colspan=1>
-        Articles explaining LLM OS
-      </th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
-      <td>
+      <td style="text-align: center">
         <a href="https://huggingface.co/blog/shivance/illustrated-llm-os">
           <img width="1440" title="Illustrated LLM OS: An Implementational Perspective" src="https://github.com/user-attachments/assets/7c3d07f4-a3f7-4296-9235-d640bba1fce2" />
         </a>
+        <div>
+          <a href="https://huggingface.co/blog/shivance/illustrated-llm-os">
+            Illustrated LLM OS: An Implementational Perspective
+          </a>
+        </div>
       </td>
     </tr>    
   </tbody>
@@ -55,25 +57,22 @@ Standard QR codes offer remarkable data capacity, with Version 40 (177x177) supp
 
 ## Browser implementation
 
-An LLM OS can be implemented in any language and environment that can communicate with an LLM. This section focuses on using a Web Browser as the host environment because Browsers expose the following:
+A web browser makes a good host for an LLM OS as we can use it to spin up a local database, access device sensors and inputs and outputs, and interact with the Browser and Web APIs without any further setup
 
-- External `<scripts>` via CDNs, Github, and local servers
-- Sensors like accelerometers, microphones, webcams, MIDI devices, and other input devices
-- Networking protocols like Websockets and Bluetooth
-- Accessible via mobile devices, smart projectors, and embedded systems
+The following QR codes contain an HTML file that do the same thing, but one is bootstrapped for local models and the other for cloud. This minimalist LLM OS that is bootstrapped to do the following:
 
-The system reimagines IndexedDB as the filesystem, with a table called `os` where the `window.location #hashstring` is used as the key. The value is rendered by the browser as raw HTML + JavaScript. Each `#hashstring` is displayed in a `textarea` and `iframe`, allowing editing and rendering. The URL itself acts as a prompting interface, enabling LLM edits with a `?prompt` parameter. Opening multiple tabs to the same `#hashstring` keeps them synced, preventing accidental edits and allowing simultaneous viewing and editing.
-
-### Bootstrapping the LLM OS
-For convenience, these QR codes all encode the same static HTML file and bootstrapped LLM OS, they just differ in their default LLM API implementation.
-
-- Scan one of the codes
-- Copy + paste the string into a `.html` file
-- Open that file in a browser
-
-You can also just clone or download the files in this repo and open them in a browser. You only have to manually create the file once, you can extend the LLM OS by simply scanning QR codes into the OS directly
-
-Data is persisted using the browser's IndexedDB API. If you open these files directly, the data will be mapped to that specific filename. Changing the filename would generate a new IndexedDB database (while keeping the old one). For production use, it's recommended to run a server (todo: explain how).
+- Enable prompting through the URL by adding `?prompt`
+  - `?prompt='create a working calculator'`
+  - `?prompt='change the background to black'`
+  - `?prompt='show an animation when it calculates'`
+- Create new files in memory by changing the URLs `#hash`
+  - `#spreadsheets`
+  - `?prompt='create a working spreadsheet app'#spreadsheets`
+  - `?prompt='a page to edit the indexeddb memory of this app'#memory`
+- Prefix other files with `?boot=file`
+  - `?boot=calculator`
+  - `?boot=desktop,handsfree`
+  - `#boot` is a special hash, its contents is always prefixed to every file
 
 <table>
   <thead>
@@ -85,9 +84,9 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
   <tbody>
     <tr>
       <td>
-        <h3><a href="https://ollama.sh">Ollama.sh</a></h3>
-        <p><a href="./ollama.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/ollama">Hosted</a></p>
-        <img src="./ollama.png" width=354>
+        <h4><a href="https://ollama.sh">Ollama.sh</a></h4>
+        <p><a href="./qrcodes/ollama.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/ollama">Hosted</a></p>
+        <img src="./qrcodes/ollama.png" width=354>
         <ul>
           <li>Default model: <a href="https://ollama.com/library/deepseek-r1:8b">deepseek/deepseek-r1</a>
           <li>Supports vision models</li>
@@ -95,9 +94,9 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
         </ul>
       </td>
       <td>
-        <h3><a href="https://openrouter.ai">OpenRouter.ai</a></h3>
-        <p><a href="./openrouter.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/openrouter">Hosted</a></p>
-        <img src="./openrouter.png" width=354>
+        <h4><a href="https://openrouter.ai">OpenRouter.ai</a></h4>
+        <p><a href="./qrcodes/openrouter.html">Source</a>, <a href="https://recursivefaith.github.io/qrcoding/openrouter">Hosted</a></p>
+        <img src="./qrcodes/openrouter.png" width=354>
         <ul>
           <li>Default model: <a href="https://openrouter.ai/deepseek/deepseek-r1">deepseek/deepseek-r1</a>
           <li>Supports vision models</li>
@@ -107,6 +106,21 @@ Data is persisted using the browser's IndexedDB API. If you open these files dir
     </tr>    
   </tbody>
 </table>
+
+### How to use the QR codes
+
+- Create a `.html` file on your desktop or device
+- Scan one of the QR codes above
+- Copy the decoded string into the `.html`
+- Open that file in a browser
+
+Once the LLM OS bootstrap file above is created, you can then generate QR codes that use the `?prompt#filename` pattern to prompt and control your LLM OS using QR codes
+
+
+### The database
+
+Data is persisted using the browser's IndexedDB and localStorage APIs. If you open these files directly in your browser without a server, the data will be mapped to that specific filename. Changing the filename would generate a new IndexedDB database (while keeping the old one). For production use, it's recommended to run a server (todo: explain how).
+
 
 ## Development Notes
 
